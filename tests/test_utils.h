@@ -84,9 +84,9 @@ static void print_test_summary(void) {
     printf("==================================\n");
     
     if (test_results.failed_tests == 0) {
-        printf("✓ All tests passed!\n");
+        printf("All tests passed!\n");
     } else {
-        printf("✗ Some tests failed.\n");
+        printf("Some tests failed.\n");
         exit(EXIT_FAILURE);
     }
 }
