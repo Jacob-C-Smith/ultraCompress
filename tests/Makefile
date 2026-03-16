@@ -1,15 +1,17 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -g -std=c99
 SRC_DIR = ../src/data_structures
+ENCODER_SRC = ../src
 TEST_DIR = .
 
 # Test executables
-TESTS = test_priority_queue test_huffman_tree test_frequency_counter
+TESTS = test_priority_queue test_huffman_tree test_frequency_counter test_huffman_encoder
 
 # Source files
 PRIORITY_QUEUE_SRC = $(SRC_DIR)/priority_queue.c
 HUFFMAN_TREE_SRC = $(SRC_DIR)/huffman_tree.c
 FREQUENCY_COUNTER_SRC = $(SRC_DIR)/frequency_counter.c
+HUFFMAN_ENCODER_SRC = $(ENCODER_SRC)/huffman_encoder.c
 
 .PHONY: all clean run
 
@@ -24,6 +26,9 @@ test_huffman_tree: test_huffman_tree.c $(HUFFMAN_TREE_SRC) $(PRIORITY_QUEUE_SRC)
 test_frequency_counter: test_frequency_counter.c $(FREQUENCY_COUNTER_SRC)
 	$(CC) $(CFLAGS) -o $@ $^
 
+test_huffman_encoder: test_huffman_encoder.c $(HUFFMAN_ENCODER_SRC) $(HUFFMAN_TREE_SRC) $(PRIORITY_QUEUE_SRC) $(FREQUENCY_COUNTER_SRC)
+	$(CC) $(CFLAGS) -I$(ENCODER_SRC) -o $@ $^
+
 run: all
 	@echo "\n========== Running Priority Queue Tests =========="
 	@./test_priority_queue
@@ -31,6 +36,8 @@ run: all
 	@./test_huffman_tree
 	@echo "\n========== Running Frequency Counter Tests =========="
 	@./test_frequency_counter
+	@echo "\n========== Running Huffman Encoder Tests =========="
+	@./test_huffman_encoder
 
 clean:
 	rm -f $(TESTS) *.o
