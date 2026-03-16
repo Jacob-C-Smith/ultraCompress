@@ -9,7 +9,7 @@
  */
 
 void print_huffman_codes(HuffmanEncoder *encoder) {
-    printf("\n===== HUFFMAN CODES (Step 4) =====\n");
+    printf("\n===== HUFFMAN CODES =====\n");
     printf("Symbol | Frequency | Code (binary)\n");
     printf("-------|-----------|---------------\n");
     
@@ -42,16 +42,16 @@ int main(void) {
     };
     uint64_t audio_length = sizeof(audio_data);
     
-    printf("STEP 1-3: Calculating frequencies and building Huffman tree...\n");
+    printf("Calculating frequencies and building Huffman tree...\n");
     HuffmanEncoder *encoder = huffman_encoder_create(audio_data, audio_length);
     if (encoder == NULL) {
         fprintf(stderr, "Failed to create encoder\n");
         return 1;
     }
-    printf("✓ Tree constructed with %lu unique symbols\n", encoder->freqs->total_symbols);
+    printf("Tree constructed with %lu unique symbols\n", encoder->freqs->total_symbols);
     
     printf("\n");
-    printf("STEP 1: Symbol Frequencies from audio data:\n");
+    printf("Symbol Frequencies from audio data:\n");
     printf("--------\n");
     int unique_symbols = 0;
     for (int i = 0; i < 256; i++) {
@@ -63,17 +63,17 @@ int main(void) {
     }
     printf("Total unique symbols: %d\n", unique_symbols);
     
-    printf("\nSTEP 4: Assigning binary codes to each symbol...\n");
+    printf("\nAssigning binary codes to each symbol...\n");
     if (huffman_encoder_assign_codes(encoder) != 0) {
         fprintf(stderr, "Failed to assign codes\n");
         huffman_encoder_free(encoder);
         return 1;
     }
-    printf("✓ Codes assigned\n");
+    printf("Codes assigned\n");
     
     print_huffman_codes(encoder);
     
-    printf("\nSTEP 5: Encoding (compressing) audio data...\n");
+    printf("\nEncoding (compressing) audio data...\n");
     uint8_t compressed_buffer[1024];
     uint64_t compressed_length;
     if (huffman_encode(encoder, audio_data, audio_length, 
@@ -83,13 +83,13 @@ int main(void) {
         huffman_encoder_free(encoder);
         return 1;
     }
-    printf("✓ Compression complete\n");
+    printf("Compression complete\n");
     printf("  Original size:   %lu bytes\n", audio_length);
     printf("  Compressed size: %lu bytes\n", compressed_length);
     printf("  Compression ratio: %.2f%%\n", 
            (1.0 - (double)compressed_length / audio_length) * 100.0);
     
-    printf("\nSTEP 6: Decoding (decompressing) audio data...\n");
+    printf("\nDecoding (decompressing) audio data...\n");
     uint8_t decompressed_buffer[1024];
     uint64_t decompressed_length;
     if (huffman_decode(encoder, compressed_buffer, compressed_length,
@@ -99,15 +99,15 @@ int main(void) {
         huffman_encoder_free(encoder);
         return 1;
     }
-    printf("✓ Decompression complete\n");
+    printf("Decompression complete\n");
     printf("  Decompressed size: %lu bytes\n", decompressed_length);
     
     /* Verify decompression */
     if (decompressed_length == audio_length &&
         memcmp(audio_data, decompressed_buffer, audio_length) == 0) {
-        printf("  ✓ Verification PASSED - Decompressed data matches original!\n");
+        printf("  Verification PASSED - Decompressed data matches original!\n");
     } else {
-        printf("  ✗ Verification FAILED - Data mismatch!\n");
+        printf("  Verification FAILED - Data mismatch!\n");
         huffman_encoder_free(encoder);
         return 1;
     }
