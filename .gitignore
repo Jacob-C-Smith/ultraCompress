@@ -41,6 +41,7 @@ tests/test_priority_queue
 tests/test_huffman_tree
 tests/test_frequency_counter
 tests/test_huffman_encoder
+tests/test_mp3_io
 
 # Debug files
 *.dSYM/
