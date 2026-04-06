@@ -1,0 +1,120 @@
+name: ultraCompress
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache build
+        uses: actions/cache@v4
+        with:
+          path: build
+          key: ${{ runner.os }}-build-${{ hashFiles('**/Makefile') }}
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc make libmpg123-dev libmp3lame-dev
+
+      - name: Build
+        run: |
+          make
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build
+          path: build
+
+  test-frequency-counter:
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build
+          path: build
+
+      - name: Run frequency counter test
+        run: |
+          chmod +x tests/test_frequency_counter
+          ./tests/test_frequency_counter
+
+  test-huffman-encoder:
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build
+          path: build
+
+      - name: Run huffman encoder test
+        run: |
+          chmod +x tests/test_huffman_encoder
+          ./tests/test_huffman_encoder
+
+  test-huffman-tree:
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build
+          path: build
+
+      - name: Run huffman tree test
+        run: |
+          chmod +x tests/test_huffman_tree
+          ./tests/test_huffman_tree
+
+  test-mp3-io:
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build
+          path: build
+
+      - name: Run mp3 io test
+        run: |
+          chmod +x tests/test_mp3_io
+          ./tests/test_mp3_io
+  
+  test-priority-queue:
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build
+          path: build
+
+      - name: Run priority queue test
+        run: |
+          chmod +x tests/test_priority_queue
+          ./tests/test_priority_queue
+  
