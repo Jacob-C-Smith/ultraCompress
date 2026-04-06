@@ -104,7 +104,7 @@ jobs:
       - name: Run mp3 io test
         run: |
           chmod +x tests/test_mp3_io
-          ./tests/test_mp3_io
+          cd tests && ./test_mp3_io
   
   test-priority-queue:
     needs: [build]
